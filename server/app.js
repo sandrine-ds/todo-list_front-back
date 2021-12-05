@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -5,7 +6,7 @@ const cors = require("cors");
 
 mongoose
   .connect(
-    "mongodb+srv://sandds:SDS66.vendredi@todoapp.pz753.mongodb.net/TodoApp?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@todoapp.pz753.mongodb.net/TodoApp?retryWrites=true&w=majority`
   )
   .then(() => {
     console.log("Connecté à la DB !");
