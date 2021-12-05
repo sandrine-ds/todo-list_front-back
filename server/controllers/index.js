@@ -1,13 +1,21 @@
 const Todo = require("../models/Todo");
 
 const getIndex = (req, res) => {
-  Todo.find({}, (err, todos) => {
-    if (err) console.log(err);
-    console.log(todos);
-    res.render("index", {
-      todos: todos,
+  try {
+    Todo.find({}, (err, todos) => {
+      if (err) {
+        console.log(err);
+      }
+      res.status(200).send({
+        todos: todos,
+      });
     });
-  });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      error: e,
+    });
+  }
 };
 
 const postIndex = (req, res) => {
@@ -33,7 +41,7 @@ const getEdit = (req, res) => {
   Todo.findById(id, (err, todo) => {
     if (err) console.log(err);
 
-    res.render("edit", {
+    res.send("edit", {
       todo: todo,
     });
   });

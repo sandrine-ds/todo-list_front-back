@@ -2,35 +2,27 @@ import React, { useState } from "react";
 import { TTodo } from "../TTodo";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
+import { fetchData } from "./TodoForm/functions/fetchData";
 
-const TodoList:React.FC =() => {
-
+const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<TTodo[]>([]);
-  const addTodo = (todo: TTodo) => {
-    if (!todo.text || /^\s*$/.test(todo.text)) {
-      return;
-    }
-    const newTodos: TTodo[] = [todo, ...todos];
-    setTodos(newTodos);
-  };
+  const [needReload, setNeedReload] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const removeTodo = (id: number | null) => {
-    const removeArr = [...todos].filter((todo: TTodo) => todo.id !== id);
-    setTodos(removeArr);
-  };
-
-  const updateTodo = (id: number | null, newValue: TTodo) => {
-    if (!newValue.text || /^\s*$/.test(newValue.text)) {
-      return;
+  React.useEffect(() => {
+    if (needReload) {
+      fetchData(setTodos, setIsLoading);
+      setNeedReload(!needReload);
     }
-    setTodos((prev: TTodo[]) =>
-      prev.map((item: TTodo) => (item.id === id ? newValue : item))
-    );
-  };
+  }, [needReload]);
+
+  if (isLoading) {
+    return <div>Is Loading</div>;
+  }
 
   const completeTodo = (id: number | null) => {
     let updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
+      if (todo._id === id) {
         todo.isComplete = !todo.isComplete;
       }
       return todo;
@@ -41,10 +33,14 @@ const TodoList:React.FC =() => {
   return (
     <>
       <h1>What's the plan for today ?</h1>
-      <TodoForm onSubmit={addTodo} />
-      <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
+      <TodoForm setNeedReload={setNeedReload} />
+      <Todo
+        todos={todos}
+        completeTodo={completeTodo}
+        setNeedReload={setNeedReload}
+      />
     </>
   );
-}
+};
 
 export default TodoList;

@@ -5,7 +5,7 @@ const indexController = require("../controllers/index");
 router.get("/", indexController.getIndex);
 
 router.post("/add", indexController.postIndex);
-router.patch("/add/:id", indexController.editTodo);
+router.patch("/edit/:id", indexController.editTodo);
 
 router.delete("/delete/:id", indexController.deleteIndex);
 

@@ -1,6 +1,7 @@
 import { TTodo } from "../../TTodo";
 
 export interface ITodoForm {
-    edit?: TTodo;
-    onSubmit: (todo: TTodo) => void;
-  }
+  edit?: TTodo;
+  setNeedReload: React.Dispatch<React.SetStateAction<boolean>>;
+  setEdit?: React.Dispatch<React.SetStateAction<TTodo>>;
+}

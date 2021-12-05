@@ -1,5 +1,5 @@
 export type TTodo = {
-  id: number | null;
+  _id: number | null;
   text: string;
   isComplete?: boolean;
 };

@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { TTodo } from "../../TTodo";
 import addTodo from "./functions/addTodo";
+import updateTodo from "./functions/updateTodos";
 import { ITodoForm } from "./ITodoForm";
 import "./todoForm.scss";
 
-const TodoForm: React.FC<ITodoForm> = ({ edit, onSubmit }) => {
+const TodoForm: React.FC<ITodoForm> = ({ edit, setNeedReload, setEdit }) => {
   const [input, setInput] = useState<TTodo>(
-    edit ? edit : { id: null, text: "" }
+    edit ? edit : { _id: null, text: "" }
   );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
-      // console.log(`inputRef`, inputRef);
       inputRef.current.focus();
     }
   }, [input]);
@@ -24,13 +24,18 @@ const TodoForm: React.FC<ITodoForm> = ({ edit, onSubmit }) => {
 
   const handleSubmit = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
-    addTodo(input);
-    onSubmit({
-      id: Math.floor(Math.random() * 10000),
-      text: input.text,
-    });
+    if (input._id) {
+      updateTodo(input);
+      console.log(input);
+      if (setEdit) setEdit({ _id: null, text: "" });
+    } else {
+      addTodo(input);
+    }
+    setNeedReload(true);
+
     setInput({ ...input, text: "" });
   };
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       {edit ? (
